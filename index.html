@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Cancer detection Overview</title>
+<script type ="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+<canvas id="doughnut-chart" width="80" height="40"></canvas>
+<script type="text/javascript">
+var femalerecords = [];
+var malerecords =[];
+
+$.ajax({
+    url: "https://health.data.ny.gov/resource/gnzp-ekau.json?ccs_diagnosis_description=Cancer of pancreas",
+    type: "GET",
+    data: {
+      "$limit" : 3000,
+      "$$app_token" : "MauakcvLd36KfZiAbPRQ7Nqbf"
+    }
+}).done(function addData(data) {
+  alert("Retrieved " + data.length + " records from the dataset!");
+ 
+  for (var i = 0; i < data.length; i++)
+  {
+ if(data[i].gender=='F')
+ {
+ console.log(data[i]);
+ femalerecords.push(data[i]);
+ }
+ else
+ {
+ malerecords.push(data[i]);
+ }
+   
+  }
+  new Chart(document.getElementById("doughnut-chart"), {
+   type: 'doughnut',
+   data: {
+     labels: ["Male", "Female"],
+     datasets: [
+         {
+           label: "Cancer of pancreas gender classification",
+           backgroundColor: ["#3e95cd", "#8e5ea2"],
+           data: [femalerecords.length,malerecords.length]
+         }
+       ]
+     },
+   options: {
+     title: {
+       display: true,
+       text: 'Cancer of pancreas detection based on Gender'
+     }
+   }
+});
+});
+</script>
+</body>
+</html>
